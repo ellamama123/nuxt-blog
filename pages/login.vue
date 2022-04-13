@@ -7,42 +7,25 @@
         lazy-validation
       >
         <v-text-field
-          v-model="name"
           :counter="10"
-          :rules="nameRules"
-          label="Name"
+          :rules="emailRules"
+          label="Email"
+          v-model="userForm.email"
           required
         ></v-text-field>
 
         <v-text-field
-          v-model="email"
-          :rules="emailRules"
           type="password"
           label="Password"
+          v-model="userForm.password"
           required
         ></v-text-field>
 
-
         <v-btn
-          :disabled="!valid"
           color="success"
-          class="mr-4"
+          @click="userLogin"
         >
-          Validate
-        </v-btn>
-
-        <v-btn
-          color="error"
-          class="mr-4"
-        >
-          Reset Form
-        </v-btn>
-
-        <v-btn
-          color="warning"
-
-        >
-          Reset Validation
+          Login
         </v-btn>
       </v-form>
     </v-col>
@@ -51,6 +34,30 @@
 
 <script>
 export default {
-  name: 'InspirePage'
+  name: 'LoginPage',
+  data() {
+      return {
+          userForm: {
+              email: '',
+              password: ''
+          }
+      }
+  },
+  methods: {
+      async userLogin() {
+          try {
+              await this.$auth
+              .login({
+                data: this.userForm,
+              })
+              this.$router.push("/");
+          } catch (err) {
+              this.$notify.error({
+                  title: 'Error',
+                  message: 'Sai email hoặc mật khẩu'
+              })
+          }
+      }
+  }
 }
 </script>
